@@ -37,6 +37,13 @@ security:
                     - app.customer_token_authenticator
             provider: token
 
+        business:
+            pattern: ^/business
+            guard:
+                authenticators:
+                    - app.provider_token_authenticator
+            provider: token
+
         main:
             anonymous: ~
 

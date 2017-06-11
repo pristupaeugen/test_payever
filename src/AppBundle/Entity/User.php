@@ -101,6 +101,12 @@ class User implements UserInterface, \Serializable
     private $tokens;
 
     /**
+     * One user has many business.
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Business", mappedBy="user")
+     */
+    private $business;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -296,6 +302,16 @@ class User implements UserInterface, \Serializable
      */
     public function getRoles()
     {
+        return $this->roles->toArray();
+    }
+
+    /**
+     * Get role collection
+     *
+     * @return ArrayCollection
+     */
+    public function getRoleCollection()
+    {
         return $this->roles;
     }
 
@@ -389,5 +405,39 @@ class User implements UserInterface, \Serializable
             $this->password,
             $this->salt
             ) = unserialize($serialized);
+    }
+
+    /**
+     * Add business
+     *
+     * @param \AppBundle\Entity\Business $business
+     *
+     * @return User
+     */
+    public function addBusiness(\AppBundle\Entity\Business $business)
+    {
+        $this->business[] = $business;
+
+        return $this;
+    }
+
+    /**
+     * Remove business
+     *
+     * @param \AppBundle\Entity\Business $business
+     */
+    public function removeBusiness(\AppBundle\Entity\Business $business)
+    {
+        $this->business->removeElement($business);
+    }
+
+    /**
+     * Get business
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBusiness()
+    {
+        return $this->business;
     }
 }

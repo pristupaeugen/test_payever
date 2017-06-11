@@ -13,3 +13,7 @@ provider:
 customer:
     resource: "@CustomerBundle/Resources/config/routing.yml"
     prefix:   /customer
+
+business:
+    resource: "@BusinessBundle/Resources/config/routing.yml"
+    prefix:   /business

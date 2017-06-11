@@ -1,0 +1,19 @@
+business_create:
+    path:     /
+    defaults: { _controller: BusinessBundle:Default:create }
+    methods: [POST]
+
+business_update:
+    path:     /{id}
+    defaults: { _controller: BusinessBundle:Default:update }
+    methods: [PUT]
+
+business_delete:
+    path:     /{id}
+    defaults: { _controller: BusinessBundle:Default:delete }
+    methods: [DELETE]
+
+business_get:
+    path:     /{id}
+    defaults: { _controller: BusinessBundle:Default:index }
+    methods: [GET]

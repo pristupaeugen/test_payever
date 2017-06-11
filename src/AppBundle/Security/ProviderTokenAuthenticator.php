@@ -75,7 +75,7 @@ class ProviderTokenAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         $tokenHeader = $request->headers->get('token');
-        if (empty($tTokenHeader))
+        if (empty($tokenHeader))
             throw new TokenIsNotSetException('Token is not undefined');
 
         return ($tokenHeader) ? ['token' => $tokenHeader] : null;
@@ -104,7 +104,7 @@ class ProviderTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        if (!$user->getRoles()->contains($this->em->getRepository('AppBundle:Role')->findOneBy(['role' => Role::ROLE_PROVIDER])))
+        if (!$user->getRoleCollection()->contains($this->em->getRepository('AppBundle:Role')->findOneBy(['role' => Role::ROLE_PROVIDER])))
             throw new UserAuthenticationException('User isn\'t allowed to use service');
 
         return true;

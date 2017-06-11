@@ -65,12 +65,12 @@ class SecurityController extends FOSRestController
         if (!$isValid)
             throw new InvalidCredentialsException('You put bad credentials');
 
-        if (!$user->getRoles()->contains($em->getRepository('AppBundle:Role')->findOneBy(['role' => Role::ROLE_CUSTOMER])))
+        if (!$user->getRoleCollection()->contains($em->getRepository('AppBundle:Role')->findOneBy(['role' => Role::ROLE_CUSTOMER])))
             throw new InvalidCredentialsException('You put bad credentials');
 
         $this->get('customer.token_manager')->populateUser($user);
 
-        $this->get("security.token_storage")->setToken(new UsernamePasswordToken($user, null, "public", $user->getRoles()->toArray()));
+        $this->get("security.token_storage")->setToken(new UsernamePasswordToken($user, null, "public", $user->getRoles()));
 
         return $user->getTokens()->first();
     }

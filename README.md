@@ -28,3 +28,8 @@ Execute unittests
 From project directory make command:
 
 `$ vendor/bin/phpunit`
+
+Link to application
+===================
+
+`http://your_url/api/doc`
