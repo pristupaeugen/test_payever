@@ -1,0 +1,12 @@
+customer_registration:
+    path:     /register
+    defaults: { _controller: CustomerBundle:Registration:register }
+    methods: [POST]
+
+customer_login:
+    path:     /login
+    defaults: { _controller: CustomerBundle:Security:login }
+
+customer_logout:
+    path:     /logout
+    defaults: { _controller: CustomerBundle:Security:logout }

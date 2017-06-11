@@ -7,18 +7,38 @@ security:
         in_memory:
             memory: ~
 
+        entity:
+            entity:
+                class: AppBundle:User
+                property: username
+
+        token:
+            entity:
+                class: AppBundle:Token
+                property: token
+
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        provider:
+            pattern: ^/provider/(?!(register|login|logout))
+            guard:
+                authenticators:
+                    - app.provider_token_authenticator
+            provider: token
+
+        customer:
+            pattern: ^/customer/(?!(register|login|logout))
+            guard:
+                authenticators:
+                    - app.customer_token_authenticator
+            provider: token
+
         main:
             anonymous: ~
-            # activate different ways to authenticate
 
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
-
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
+    encoders:
+        AppBundle\Entity\User: bcrypt

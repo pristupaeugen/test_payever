@@ -1,0 +1,12 @@
+provider_registration:
+    path:     /register
+    defaults: { _controller: ProviderBundle:Registration:register }
+    methods: [POST]
+
+provider_login:
+    path:     /login
+    defaults: { _controller: ProviderBundle:Security:login }
+
+provider_logout:
+    path:     /logout
+    defaults: { _controller: ProviderBundle:Security:logout }

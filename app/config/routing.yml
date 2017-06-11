@@ -1,3 +1,15 @@
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+provider:
+    resource: "@ProviderBundle/Resources/config/routing.yml"
+    prefix:   /provider
+
+customer:
+    resource: "@CustomerBundle/Resources/config/routing.yml"
+    prefix:   /customer

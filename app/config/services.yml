@@ -33,3 +33,11 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    app.provider_token_authenticator:
+        class: AppBundle\Security\ProviderTokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager', '@router', '@service_container']
+
+    app.customer_token_authenticator:
+        class: AppBundle\Security\CustomerTokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager', '@router', '@service_container']

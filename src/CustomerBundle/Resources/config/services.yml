@@ -1,0 +1,7 @@
+services:
+    customer.password_manager:
+        class: AppBundle\Service\PasswordManager
+
+    customer.token_manager:
+        class: AppBundle\Service\TokenManager
+        arguments: ['@doctrine.orm.entity_manager', '@customer.password_manager']
