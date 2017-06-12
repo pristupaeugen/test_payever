@@ -1,0 +1,4 @@
+services:
+    product.store_service:
+        class: ProductBundle\Service\StoreService
+        arguments: ['@security.token_storage', '@router', '%host%']

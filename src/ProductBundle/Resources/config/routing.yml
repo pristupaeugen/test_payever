@@ -1,0 +1,24 @@
+product_create:
+    path:     /
+    defaults: { _controller: ProductBundle:Default:create }
+    methods: [POST]
+
+product_update:
+    path:     /{id}
+    defaults: { _controller: ProductBundle:Default:update }
+    methods: [PUT]
+
+product_delete:
+    path:     /{id}
+    defaults: { _controller: ProductBundle:Default:delete }
+    methods: [DELETE]
+
+product_delete_many:
+    path:     /{store}/products
+    defaults: { _controller: ProductBundle:Default:deleteMany }
+    methods: [DELETE]
+
+product_get:
+    path:     /{id}
+    defaults: { _controller: ProductBundle:Default:index }
+    methods: [GET]

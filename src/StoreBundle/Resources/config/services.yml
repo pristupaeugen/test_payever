@@ -2,3 +2,7 @@ services:
     store.business_service:
         class: StoreBundle\Service\BusinessService
         arguments: ['@security.token_storage', '@router', '%host%']
+
+    store.product_service:
+        class: StoreBundle\Service\ProductService
+        arguments: ['@security.token_storage', '@router', '%host%']

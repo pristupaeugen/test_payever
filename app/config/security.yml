@@ -51,6 +51,13 @@ security:
                     - app.provider_token_authenticator
             provider: token
 
+        product:
+            pattern: ^/product
+            guard:
+                authenticators:
+                    - app.provider_token_authenticator
+            provider: token
+
         main:
             anonymous: ~
 

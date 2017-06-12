@@ -136,6 +136,42 @@ class DefaultController extends FOSRestController
     }
 
     /**
+     * @param Request $request
+     * @param Store $store
+     * @return User|\Symfony\Component\Form\Form
+     *
+     * @ApiDoc(
+     *  section     = "Store",
+     *  description = "Update product date",
+     *  output={
+     *    "class"="AppBundle\Entity\Store"
+     *  },
+     *  statusCodes = {
+     *     200 = "Successful",
+     *     401 = "Authentication error",
+     *     404 = "Not found"
+     *   }
+     * )
+     */
+    public function updateProductDateAction(Store $store)
+    {
+        $businessData = $this->get('store.business_service')->getBusinessData($store->getBusiness()->getId());
+        if (!$businessData) {
+
+            throw new BusinessException('You aren\'t allowed to update store');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $store->setProductsUpdated(new \DateTime());
+
+        $em->persist($store);
+        $em->flush();
+
+        return $store;
+    }
+
+    /**
      * @param Store $store
      * @return User|\Symfony\Component\Form\Form
      *
@@ -154,6 +190,14 @@ class DefaultController extends FOSRestController
      */
     public function deleteAction(Store $store)
     {
+        $businessData = $this->get('store.business_service')->getBusinessData($store->getBusiness()->getId());
+        if (!$businessData) {
+
+            throw new BusinessException('You aren\'t allowed to delete store');
+        }
+
+        $this->get('store.product_service')->deleteManyProducts($store->getId());
+
         $em = $this->getDoctrine()->getManager();
 
         $em->remove($store);
@@ -181,6 +225,37 @@ class DefaultController extends FOSRestController
      */
     public function indexAction(Store $store)
     {
+        $businessData = $this->get('store.business_service')->getBusinessData($store->getBusiness()->getId());
+        if (!$businessData) {
+
+            throw new BusinessException('You aren\'t allowed to view store');
+        }
+
         return $store;
+    }
+
+    /**
+     * @param Store $store
+     * @return User|\Symfony\Component\Form\Form
+     *
+     * @ApiDoc(
+     *  section     = "Store",
+     *  description = "Get provider",
+     *  output={
+     *    "class"="AppBundle\Entity\User"
+     *  },
+     *  statusCodes = {
+     *     200 = "Successful",
+     *     401 = "Authentication error",
+     *     404 = "Not found"
+     *   }
+     * )
+     */
+    public function providerAction(Store $store)
+    {
+        $context = SerializationContext::create()->setGroups(array('info'))->setSerializeNull(true);
+        $user    = $this->get('jms_serializer')->serialize($store->getBusiness()->getUser(), 'json', $context);
+
+        return new Response($user, 200, ['Content-Type' => 'application/json']);
     }
 }

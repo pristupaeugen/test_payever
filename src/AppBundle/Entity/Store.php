@@ -52,6 +52,27 @@ class Store
     private $business;
 
     /**
+     * One stores has many products.
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="store")
+     * @Exclude
+     */
+    private $products;
+
+    /**
+     * One stores has many categories.
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="store")
+     * @Exclude
+     */
+    private $categories;
+
+    /**
+     * @var string $productsUpdated
+     *
+     * @ORM\Column(name="products_updated", type="datetime", nullable=true)
+     */
+    protected $productsUpdated;
+
+    /**
      * Get id
      *
      * @return int
@@ -131,5 +152,105 @@ class Store
     public function getBusiness()
     {
         return $this->business;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add product
+     *
+     * @param \AppBundle\Entity\Product $product
+     *
+     * @return Store
+     */
+    public function addProduct(\AppBundle\Entity\Product $product)
+    {
+        $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Remove product
+     *
+     * @param \AppBundle\Entity\Product $product
+     */
+    public function removeProduct(\AppBundle\Entity\Product $product)
+    {
+        $this->products->removeElement($product);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Add category
+     *
+     * @param \AppBundle\Entity\Category $category
+     *
+     * @return Store
+     */
+    public function addCategory(\AppBundle\Entity\Category $category)
+    {
+        $this->categories[] = $category;
+
+        return $this;
+    }
+
+    /**
+     * Remove category
+     *
+     * @param \AppBundle\Entity\Category $category
+     */
+    public function removeCategory(\AppBundle\Entity\Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Set productsUpdated
+     *
+     * @param \DateTime $productsUpdated
+     *
+     * @return Store
+     */
+    public function setProductsUpdated($productsUpdated)
+    {
+        $this->productsUpdated = $productsUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get productsUpdated
+     *
+     * @return \DateTime
+     */
+    public function getProductsUpdated()
+    {
+        return $this->productsUpdated;
     }
 }

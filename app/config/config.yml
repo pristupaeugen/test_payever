@@ -6,6 +6,7 @@ imports:
     - { resource: "@ProviderBundle/Resources/config/services.yml" }
     - { resource: "@BusinessBundle/Resources/config/services.yml" }
     - { resource: "@StoreBundle/Resources/config/services.yml" }
+    - { resource: "@ProductBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -90,6 +91,7 @@ fos_rest:
             - { path: '^/customer', priorities: ['json'], fallback_format: json, prefer_extension: false }
             - { path: '^/business', priorities: ['json'], fallback_format: json, prefer_extension: false }
             - { path: '^/store', priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { path: '^/product', priorities: ['json'], fallback_format: json, prefer_extension: false }
             - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: html, prefer_extension: true }
     param_fetcher_listener: true
     view:

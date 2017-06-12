@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * User
@@ -29,6 +30,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"info"})
      */
     private $id;
 
@@ -55,6 +57,7 @@ class User implements UserInterface, \Serializable
      *     min=2
      * )
      * @ORM\Column(name="first_name", type="string", length=255, nullable=false)
+     * @Groups({"info"})
      */
     private $firstname;
 
@@ -64,6 +67,7 @@ class User implements UserInterface, \Serializable
      *     min=2
      * )
      * @ORM\Column(type="string", length=255, nullable=false)
+     * @Groups({"info"})
      */
     private $surname;
 

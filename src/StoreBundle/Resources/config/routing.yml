@@ -8,6 +8,11 @@ store_update:
     defaults: { _controller: StoreBundle:Default:update }
     methods: [PUT]
 
+store_update_product_date:
+    path:     /{id}/updateProductDate
+    defaults: { _controller: StoreBundle:Default:updateProductDate }
+    methods: [PUT]
+
 store_delete:
     path:     /{id}
     defaults: { _controller: StoreBundle:Default:delete }
@@ -16,4 +21,9 @@ store_delete:
 store_get:
     path:     /{id}
     defaults: { _controller: StoreBundle:Default:index }
+    methods: [GET]
+
+store_get_provider:
+    path:     /{id}/provider
+    defaults: { _controller: StoreBundle:Default:provider }
     methods: [GET]
