@@ -14,3 +14,11 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        driver:  pdo_sqlite
+        path: '%database_path%'
+
+liip_functional_test:
+    command_verbosity: quiet
