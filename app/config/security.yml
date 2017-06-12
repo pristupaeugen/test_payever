@@ -44,6 +44,13 @@ security:
                     - app.provider_token_authenticator
             provider: token
 
+        store:
+            pattern: ^/store
+            guard:
+                authenticators:
+                    - app.provider_token_authenticator
+            provider: token
+
         main:
             anonymous: ~
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace BusinessBundle\Controller;
+namespace StoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +14,11 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use JMS\Serializer\SerializationContext;
 
 use AppBundle\Entity\Business;
+use AppBundle\Entity\Store;
 
-use BusinessBundle\Form\BusinessType;
-use BusinessBundle\Exception\AuthenticationException;
+use StoreBundle\Form\StoreType;
+use StoreBundle\Exception\BusinessException;
+use StoreBundle\Exception\ParamIsNotSetException;
 
 class DefaultController extends FOSRestController
 {
@@ -25,18 +27,20 @@ class DefaultController extends FOSRestController
      * @return User|\Symfony\Component\Form\Form
      *
      * @ApiDoc(
-     *  section     = "Business",
+     *  section     = "Store",
      *  description = "Create",
      *  parameters={
-     *      {"name"="title",       "dataType"="string", "format"="example@example.com", "required"=true, "description"="Title field"},
-     *      {"name"="description", "dataType"="string", "required"=true, "description" = "Description field"}
+     *      {"name"="title",       "dataType"="string",  "format"="example@example.com", "required"=true, "description"="Title field"},
+     *      {"name"="description", "dataType"="string",  "required"=true, "description" = "Description field"},
+     *      {"name"="business_id", "dataType"="integer", "required"=true, "description" = "Business id field"}
      *  },
      *  output={
-     *    "class"="AppBundle\Entity\Business"
+     *    "class"="AppBundle\Entity\Store"
      *  },
      *  statusCodes = {
      *     200 = "Successful",
-     *     400 = "Form validation error"
+     *     400 = "Form validation error",
+     *     401 = "Unauthorized"
      *   }
      * )
      */
@@ -44,20 +48,31 @@ class DefaultController extends FOSRestController
     {
         $data = json_decode($request->getContent(), true);
 
-        $business = new Business();
-        $form = $this->createForm(BusinessType::class, $business, array('csrf_protection' => false));
+        if (empty($data['business_id'])) {
+
+            throw new ParamIsNotSetException('Business id doesn\'t exist');
+        }
+
+        $businessData = $this->get('store.business_service')->getBusinessData($data['business_id']);
+        if (!$businessData) {
+
+            throw new BusinessException('Wrong business id');
+        }
+
+        $store = new Store();
+        $form  = $this->createForm(StoreType::class, $store, array('csrf_protection' => false));
 
         $form->submit($data);
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
 
-            $business->setUser($this->get('security.token_storage')->getToken()->getUser());
+            $store->setBusiness($em->getRepository('AppBundle:Business')->find($data['business_id']));
 
-            $em->persist($business);
+            $em->persist($store);
             $em->flush();
 
-            return $business;
+            return $store;
         }
 
         return new Response($form->getErrors(), Response::HTTP_BAD_REQUEST, ['Content-Type' => 'application/json']);
@@ -65,18 +80,19 @@ class DefaultController extends FOSRestController
 
     /**
      * @param Request $request
-     * @param Business $business
+     * @param Store $store
      * @return User|\Symfony\Component\Form\Form
      *
      * @ApiDoc(
-     *  section     = "Business",
+     *  section     = "Store",
      *  description = "Update",
      *  parameters={
      *      {"name"="title",       "dataType"="string",  "format"="example@example.com", "required"=true, "description"="Title field"},
-     *      {"name"="description", "dataType"="string",  "required"=true, "description" = "Description field"}
+     *      {"name"="description", "dataType"="string",  "required"=true, "description" = "Description field"},
+     *      {"name"="business_id", "dataType"="integer", "required"=true, "description" = "Business id field"}
      *  },
      *  output={
-     *    "class"="AppBundle\Entity\Business"
+     *    "class"="AppBundle\Entity\Store"
      *  },
      *  statusCodes = {
      *     200 = "Successful",
@@ -86,37 +102,45 @@ class DefaultController extends FOSRestController
      *   }
      * )
      */
-    public function updateAction(Request $request, Business $business)
+    public function updateAction(Request $request, Store $store)
     {
-        if ($business->getUser()->getId() != $this->get('security.token_storage')->getToken()->getUser()->getId()) {
-
-            throw new AuthenticationException('You are not allowed to update business');
-        }
-
         $data = json_decode($request->getContent(), true);
 
-        $form = $this->createForm(BusinessType::class, $business, array('csrf_protection' => false));
+        if (empty($data['business_id'])) {
+
+            throw new ParamIsNotSetException('Business id doesn\'t exist');
+        }
+
+        $businessData = $this->get('store.business_service')->getBusinessData($data['business_id']);
+        if (!$businessData) {
+
+            throw new BusinessException('Wrong business id');
+        }
+
+        $form = $this->createForm(StoreType::class, $store, array('csrf_protection' => false));
 
         $form->submit($data);
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
 
-            $em->persist($business);
+            $store->setBusiness($em->getRepository('AppBundle:Business')->find($data['business_id']));
+
+            $em->persist($store);
             $em->flush();
 
-            return $business;
+            return $store;
         }
 
         return new Response($form->getErrors(), Response::HTTP_BAD_REQUEST, ['Content-Type' => 'application/json']);
     }
 
     /**
-     * @param Business $business
+     * @param Store $store
      * @return User|\Symfony\Component\Form\Form
      *
      * @ApiDoc(
-     *  section     = "Business",
+     *  section     = "Store",
      *  description = "Delete",
      *  output={
      *    "class"="AppBundle\Doc\OutputTrue"
@@ -128,30 +152,25 @@ class DefaultController extends FOSRestController
      *   }
      * )
      */
-    public function deleteAction(Business $business)
+    public function deleteAction(Store $store)
     {
-        if ($business->getUser()->getId() != $this->get('security.token_storage')->getToken()->getUser()->getId()) {
-
-            throw new AuthenticationException('You are not allowed to delete business');
-        }
-
         $em = $this->getDoctrine()->getManager();
 
-        $em->remove($business);
+        $em->remove($store);
         $em->flush();
 
         return ['result' => true];
     }
 
     /**
-     * @param Business $business
+     * @param Store $store
      * @return User|\Symfony\Component\Form\Form
      *
      * @ApiDoc(
-     *  section     = "Business",
+     *  section     = "Store",
      *  description = "Get",
      *  output={
-     *    "class"="AppBundle\Entity\Business"
+     *    "class"="AppBundle\Entity\Store"
      *  },
      *  statusCodes = {
      *     200 = "Successful",
@@ -160,13 +179,8 @@ class DefaultController extends FOSRestController
      *   }
      * )
      */
-    public function indexAction(Business $business)
+    public function indexAction(Store $store)
     {
-        if ($business->getUser()->getId() != $this->get('security.token_storage')->getToken()->getUser()->getId()) {
-
-            throw new AuthenticationException('You are not allowed to view business');
-        }
-
-        return $business;
+        return $store;
     }
 }

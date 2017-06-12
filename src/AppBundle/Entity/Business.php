@@ -52,6 +52,13 @@ class Business
     private $user;
 
     /**
+     * One business has many stores.
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Store", mappedBy="business")
+     * @Exclude
+     */
+    private $stores;
+
+    /**
      * Get id
      *
      * @return int
@@ -131,5 +138,46 @@ class Business
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->stores = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add store
+     *
+     * @param \AppBundle\Entity\Store $store
+     *
+     * @return Business
+     */
+    public function addStore(\AppBundle\Entity\Store $store)
+    {
+        $this->stores[] = $store;
+
+        return $this;
+    }
+
+    /**
+     * Remove store
+     *
+     * @param \AppBundle\Entity\Store $store
+     */
+    public function removeStore(\AppBundle\Entity\Store $store)
+    {
+        $this->stores->removeElement($store);
+    }
+
+    /**
+     * Get stores
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStores()
+    {
+        return $this->stores;
     }
 }

@@ -17,3 +17,7 @@ customer:
 business:
     resource: "@BusinessBundle/Resources/config/routing.yml"
     prefix:   /business
+
+store:
+    resource: "@StoreBundle/Resources/config/routing.yml"
+    prefix:   /store

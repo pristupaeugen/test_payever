@@ -1,0 +1,19 @@
+store_create:
+    path:     /
+    defaults: { _controller: StoreBundle:Default:create }
+    methods: [POST]
+
+store_update:
+    path:     /{id}
+    defaults: { _controller: StoreBundle:Default:update }
+    methods: [PUT]
+
+store_delete:
+    path:     /{id}
+    defaults: { _controller: StoreBundle:Default:delete }
+    methods: [DELETE]
+
+store_get:
+    path:     /{id}
+    defaults: { _controller: StoreBundle:Default:index }
+    methods: [GET]
