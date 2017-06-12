@@ -35,6 +35,11 @@ Link to application
 `http://your_url/api/doc`
 
 Important
-===================
+=========
 
 We should pass data in raw format but not in form data format
+
+Contexts Map
+============
+
+Contexts map is in contexts_map.png
